@@ -424,7 +424,8 @@ section[aria-labelledby="chart-heading"] {
 
 /* Submit button */
 #add-btn {
-  align-self: flex-start;
+  display: block;
+  width: 100%;
   padding: 0.6rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
@@ -434,8 +435,7 @@ section[aria-labelledby="chart-heading"] {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.15s ease, box-shadow 0.15s ease;
-  min-height: 44px; /* accessible tap target */
-  min-width: 44px;
+  min-height: 44px;
 }
 
 #add-btn:hover {
