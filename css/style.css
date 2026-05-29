@@ -366,9 +366,51 @@ section[aria-labelledby="chart-heading"] {
   display: block;
 }
 
-/* ── Add-category inline row ── */
-.add-category-row {
+/* ── Category select row (dropdown + delete button side-by-side) ── */
+.category-select-row {
   display: flex;
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+/* Let the select fill available space; override the full-width default */
+.category-select-row select {
+  flex: 1 1 auto;
+  width: auto;
+}
+
+#delete-category-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.6rem;
+  min-width: 40px;
+  min-height: 40px;
+  font-size: 1rem;
+  line-height: 1;
+  background-color: transparent;
+  color: #c0392b;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+#delete-category-btn:hover {
+  background-color: #fdecea;
+  border-color: #c0392b;
+  color: #922b21;
+}
+
+#delete-category-btn:focus-visible {
+  outline: 3px solid #c0392b;
+  outline-offset: 2px;
+}
+
+/* ── Add-category inline row ── */
+.add-category-row {  display: flex;
   gap: 0.4rem;
   margin-top: 0.35rem;
 }

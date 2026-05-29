@@ -71,9 +71,14 @@
 
           <div class="form-field">
             <label for="item-category">Category</label>
-            <select id="item-category" name="item-category" required>
-              <option value="">-- Select Category --</option>
-            </select>
+            <div class="category-select-row">
+              <select id="item-category" name="item-category" required>
+                <option value="">-- Select Category --</option>
+              </select>
+              <button type="button" id="delete-category-btn" aria-label="Delete selected category" title="Delete selected category">
+                🗑
+              </button>
+            </div>
             <span class="field-error" aria-live="polite"></span>
             <div class="add-category-row">
               <input

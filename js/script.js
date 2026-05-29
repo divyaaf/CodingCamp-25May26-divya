@@ -163,6 +163,7 @@ const BudgetManager = {
 // Color lookup is always safe — unknown categories get an auto-generated color.
 const CategoryManager = {
   STORAGE_KEY: 'ebv_categories',
+  DEFAULTS: ['Food', 'Transport', 'Fun'],
 
   // Ordered palette for the first N categories (covers the 3 defaults + extras)
   _palette: [
@@ -215,6 +216,33 @@ const CategoryManager = {
       return `"${trimmed}" already exists.`;
     }
     this._categories.push(trimmed);
+    this._persist();
+    return null; // success
+  },
+
+  /**
+   * Removes a custom category by name.
+   * Returns null on success, or an error string on failure:
+   *   - Empty / not selected
+   *   - Is a default category
+   *   - Is used by at least one existing transaction
+   * @param {string} name
+   * @param {Array} transactions - current transaction list for usage check
+   * @returns {string|null}
+   */
+  remove(name, transactions) {
+    if (!name) return 'Please select a category to delete.';
+
+    if (this.DEFAULTS.includes(name)) {
+      return `"${name}" is a default category and cannot be deleted.`;
+    }
+
+    const inUse = transactions.some(tx => tx.category === name);
+    if (inUse) {
+      return 'Cannot delete this category because it is currently used in your expenses.';
+    }
+
+    this._categories = this._categories.filter(c => c !== name);
     this._persist();
     return null; // success
   },
@@ -737,9 +765,30 @@ const EventHandlers = {
       });
     }
 
+    // Delete-category button
+    const deleteCategoryBtn = document.querySelector('#delete-category-btn');
+    if (deleteCategoryBtn) {
+      deleteCategoryBtn.addEventListener('click', () => {
+        const select = document.querySelector('#item-category');
+        const categoryError = document.querySelector('#category-error');
+        if (categoryError) categoryError.textContent = '';
+
+        const selected = select ? select.value : '';
+        const err = CategoryManager.remove(selected, StateManager.getTransactions());
+
+        if (err) {
+          if (categoryError) categoryError.textContent = err;
+          return;
+        }
+
+        // Success — rebuild dropdown (resets to placeholder) and re-render chart
+        CategoryManager.renderDropdown();
+        Renderer.render();
+      });
+    }
+
     // Add-category button
-    const addCategoryBtn   = document.querySelector('#add-category-btn');
-    const newCategoryInput = document.querySelector('#new-category-input');
+    const addCategoryBtn   = document.querySelector('#add-category-btn');    const newCategoryInput = document.querySelector('#new-category-input');
     const categoryError    = document.querySelector('#category-error');
 
     if (addCategoryBtn && newCategoryInput) {
